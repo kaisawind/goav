@@ -4,8 +4,8 @@ package avutil
 import "C"
 
 const (
-	AV_ROUND_NEAR_INF    = C.AV_ROUND_NEAR_INF
-	AV_ROUND_PASS_MINMAX = C.AV_ROUND_PASS_MINMAX
+	AvRoundNearInf    = C.AV_ROUND_NEAR_INF
+	AvRoundPassMinmax = C.AV_ROUND_PASS_MINMAX
 )
 
 func AvRescaleQ(a int64, bq Rational, cq Rational) int64 {

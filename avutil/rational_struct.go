@@ -35,7 +35,7 @@ func (r Rational) String() string {
 }
 
 func NewRational(num, den int) Rational {
-	var r Rational
+	r := Rational{}
 	r.SetNum(num)
 	r.SetDen(den)
 	return r

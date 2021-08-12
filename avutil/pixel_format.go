@@ -5,27 +5,27 @@ package avutil
 import "C"
 
 const (
-	AV_PIX_FMT_BGR24    = C.AV_PIX_FMT_BGR24
-	AV_PIX_FMT_NONE     = C.AV_PIX_FMT_NONE
-	AV_PIX_FMT_RGB24    = C.AV_PIX_FMT_RGB24
-	AV_PIX_FMT_RGBA     = C.AV_PIX_FMT_RGBA
-	AV_PIX_FMT_YUV420P  = C.AV_PIX_FMT_YUV420P
-	AV_PIX_FMT_YUVJ420P = C.AV_PIX_FMT_YUVJ420P
+	AvPixFmtBgr24    = C.AV_PIX_FMT_BGR24
+	AvPixFmtNone     = C.AV_PIX_FMT_NONE
+	AvPixFmtRgb24    = C.AV_PIX_FMT_RGB24
+	AvPixFmtRgba     = C.AV_PIX_FMT_RGBA
+	AvPixFmtYuv420P  = C.AV_PIX_FMT_YUV420P
+	AvPixFmtYuvj420P = C.AV_PIX_FMT_YUVJ420P
 )
 
 // PixelFormatFromString returns a pixel format from a string
 func PixelFormatFromString(i string) PixelFormat {
 	switch i {
 	case "bgr24":
-		return AV_PIX_FMT_BGR24
+		return AvPixFmtBgr24
 	case "rgb24":
-		return AV_PIX_FMT_RGB24
+		return AvPixFmtRgb24
 	case "rgba":
-		return AV_PIX_FMT_RGBA
+		return AvPixFmtRgba
 	case "yuv420p":
-		return AV_PIX_FMT_YUV420P
+		return AvPixFmtYuv420P
 	case "yuvj420p":
-		return AV_PIX_FMT_YUVJ420P
+		return AvPixFmtYuvj420P
 	default:
 		return -1
 	}

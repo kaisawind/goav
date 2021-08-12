@@ -20,11 +20,11 @@ func (f *Frame) DataItem(idx int) **uint8 {
 	return (**uint8)(unsafe.Pointer(C.dataItem((*C.uint8_t)(unsafe.Pointer(&f.data)), C.int(idx))))
 }
 
-func (f *Frame) Linesize() int {
+func (f *Frame) LineSize() int {
 	return int(*(*C.int)(unsafe.Pointer(&f.linesize)))
 }
 
-func (f *Frame) LinesizePtr() *int {
+func (f *Frame) LineSizePtr() *int {
 	return (*int)(unsafe.Pointer((*C.int)(unsafe.Pointer(&f.linesize))))
 }
 

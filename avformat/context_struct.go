@@ -43,8 +43,8 @@ func (ctxt *Context) Metadata() *avutil.Dictionary {
 	return (*avutil.Dictionary)(unsafe.Pointer(ctxt.metadata))
 }
 
-func (ctxt *Context) Internal() *AvFormatInternal {
-	return (*AvFormatInternal)(unsafe.Pointer(ctxt.internal))
+func (ctxt *Context) Internal() *Internal {
+	return (*Internal)(unsafe.Pointer(ctxt.internal))
 }
 
 func (ctxt *Context) Pb() *AvIOContext {
@@ -70,7 +70,7 @@ func (ctxt *Context) Programs() **AvProgram {
 }
 
 func (ctxt *Context) Streams() []*Stream {
-	arr := (*[MAX_ARRAY_SIZE](*Stream))(unsafe.Pointer(ctxt.streams))
+	arr := (*[MaxArraySize](*Stream))(unsafe.Pointer(ctxt.streams))
 
 	return arr[:ctxt.NbStreams()]
 }
