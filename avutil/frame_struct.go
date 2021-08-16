@@ -8,6 +8,14 @@ static inline uint8_t ** dataItem(uint8_t * data, int idx)
 {
 	return (uint8_t **)&data[idx];
 }
+int lineSizeItem(AVFrame *frame, int idx)
+{
+	return frame->linesize[idx];
+}
+
+void set_data(AVFrame *frame, int idx, int l_size, uint8_t data) {
+    frame->data[idx][l_size] = data;
+}
 */
 import "C"
 import "unsafe"
@@ -20,11 +28,20 @@ func (f *Frame) DataItem(idx int) **uint8 {
 	return (**uint8)(unsafe.Pointer(C.dataItem((*C.uint8_t)(unsafe.Pointer(&f.data)), C.int(idx))))
 }
 
-func (f *Frame) Linesize() int {
+func (f *Frame) SetData(idx int, lineSize int, data byte) *Frame {
+	C.set_data((*C.struct_AVFrame)(unsafe.Pointer(f)), C.int(idx), C.int(lineSize), (C.uint8_t)(data))
+	return f
+}
+
+func (f *Frame) LineSize() int {
 	return int(*(*C.int)(unsafe.Pointer(&f.linesize)))
 }
 
-func (f *Frame) LinesizePtr() *int {
+func (f *Frame) LineSizeItem(idx int) int {
+	return int(C.lineSizeItem((*C.struct_AVFrame)(unsafe.Pointer(f)), C.int(idx)))
+}
+
+func (f *Frame) LineSizePtr() *int {
 	return (*int)(unsafe.Pointer((*C.int)(unsafe.Pointer(&f.linesize))))
 }
 
@@ -32,48 +49,55 @@ func (f *Frame) Width() int {
 	return int(f.width)
 }
 
-func (f *Frame) SetWidth(w int) {
+func (f *Frame) SetWidth(w int) *Frame {
 	f.width = C.int(w)
+	return f
 }
 
 func (f *Frame) Height() int {
 	return int(f.height)
 }
 
-func (f *Frame) SetHeight(h int) {
+func (f *Frame) SetHeight(h int) *Frame {
 	f.height = C.int(h)
+	return f
 }
 
 func (f *Frame) Format() int {
 	return int(f.format)
 }
 
-func (f *Frame) SetFormat(fmt int) {
+func (f *Frame) SetFormat(fmt PixelFormat) *Frame {
 	f.format = C.int(fmt)
+	return f
 }
 
 func (f *Frame) NbSamples() int {
 	return int(f.nb_samples)
 }
 
-func (f *Frame) SetNbSamples(n int) {
+func (f *Frame) SetNbSamples(n int) *Frame {
 	f.nb_samples = C.int(n)
+	return f
 }
 
-func (f *Frame) SetKeyFrame(k int) {
+func (f *Frame) SetKeyFrame(k int) *Frame {
 	f.key_frame = C.int(k)
+	return f
 }
 
-func (f *Frame) SetPictType(t AvPictureType) {
+func (f *Frame) SetPictType(t AvPictureType) *Frame {
 	f.pict_type = C.enum_AVPictureType(t)
+	return f
 }
 
 func (f *Frame) Pts() int64 {
 	return int64(f.pts)
 }
 
-func (f *Frame) SetPts(i int64) {
+func (f *Frame) SetPts(i int64) *Frame {
 	f.pts = C.int64_t(i)
+	return f
 }
 
 func (f *Frame) PktPts() int64 {

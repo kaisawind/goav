@@ -7,12 +7,28 @@
 // Some generic features and utilities provided by the libavutil library
 package avutil
 
-//#cgo pkg-config: libavutil
-//#include <libavutil/avutil.h>
-//#include <libavutil/channel_layout.h>
-//#include <libavutil/pixdesc.h>
-//#include <stdlib.h>
-//#include <errno.h>
+import "C"
+
+/*
+#cgo pkg-config: libavutil
+#include <libavutil/avutil.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/pixdesc.h>
+#include <stdlib.h>
+#include <errno.h>
+
+unsigned major(unsigned v) {
+	return AV_VERSION_MAJOR(v);
+}
+
+unsigned minor(unsigned v) {
+	return AV_VERSION_MINOR(v);
+}
+
+unsigned micro(unsigned v) {
+	return AV_VERSION_MICRO(v);
+}
+*/
 import "C"
 import (
 	"fmt"
@@ -30,99 +46,123 @@ type (
 )
 
 const (
-	AV_TIME_BASE   = C.AV_TIME_BASE
-	AV_NOPTS_VALUE = C.AV_NOPTS_VALUE
+	AvTimeBase   = C.AV_TIME_BASE
+	AvNoPtsValue = C.AV_NOPTS_VALUE
 )
 
-var AV_TIME_BASE_Q Rational = NewRational(1, AV_TIME_BASE)
+var AvTimeBaseQ Rational = NewRational(1, AvTimeBase)
 
 const (
-	AVMEDIA_TYPE_UNKNOWN    = C.AVMEDIA_TYPE_UNKNOWN
-	AVMEDIA_TYPE_VIDEO      = C.AVMEDIA_TYPE_VIDEO
-	AVMEDIA_TYPE_AUDIO      = C.AVMEDIA_TYPE_AUDIO
-	AVMEDIA_TYPE_DATA       = C.AVMEDIA_TYPE_DATA
-	AVMEDIA_TYPE_SUBTITLE   = C.AVMEDIA_TYPE_SUBTITLE
-	AVMEDIA_TYPE_ATTACHMENT = C.AVMEDIA_TYPE_ATTACHMENT
-	AVMEDIA_TYPE_NB         = C.AVMEDIA_TYPE_NB
+	AvMediaTypeUnknown    = C.AVMEDIA_TYPE_UNKNOWN
+	AvMediaTypeVideo      = C.AVMEDIA_TYPE_VIDEO
+	AvMediaTypeAudio      = C.AVMEDIA_TYPE_AUDIO
+	AvMediaTypeData       = C.AVMEDIA_TYPE_DATA
+	AvMediaTypeSubtitle   = C.AVMEDIA_TYPE_SUBTITLE
+	AvMediaTypeAttachment = C.AVMEDIA_TYPE_ATTACHMENT
+	AvMediaTypeNb         = C.AVMEDIA_TYPE_NB
 )
 
 // MediaTypeFromString returns a media type from a string
 func MediaTypeFromString(i string) MediaType {
 	switch i {
 	case "audio":
-		return AVMEDIA_TYPE_AUDIO
+		return AvMediaTypeAudio
 	case "subtitle":
-		return AVMEDIA_TYPE_SUBTITLE
+		return AvMediaTypeSubtitle
 	case "video":
-		return AVMEDIA_TYPE_VIDEO
+		return AvMediaTypeVideo
 	default:
 		return -1
 	}
 }
 
 const (
-	AV_CH_FRONT_LEFT    = 0x1
-	AV_CH_FRONT_RIGHT   = 0x2
-	AV_CH_LAYOUT_STEREO = 0x3 //(AV_CH_FRONT_LEFT | AV_CH_FRONT_RIGHT)
+	AvChFrontLeft    = 0x1
+	AvChFrontRight   = 0x2
+	AvChLayoutStereo = 0x3 //(AvChFrontLeft | AvChFrontRight)
 )
 
 const (
-	AVERROR_EAGAIN    = -(C.EAGAIN)
-	AVERROR_EIO       = -(C.EIO)
-	AVERROR_EOF       = C.AVERROR_EOF
-	AVERROR_EPERM     = -(C.EPERM)
-	AVERROR_EPIPE     = -(C.EPIPE)
-	AVERROR_ETIMEDOUT = -(C.ETIMEDOUT)
+	AvErrorEagain    = -(C.EAGAIN)
+	AvErrorEio       = -(C.EIO)
+	AvErrorEof       = C.AVERROR_EOF
+	AvErrorEperm     = -(C.EPERM)
+	AvErrorEpipe     = -(C.EPIPE)
+	AvErrorEtimedout = -(C.ETIMEDOUT)
 )
 
 const (
-	MAX_AVERROR_STR_LEN        = 255
-	MAX_CHANNEL_LAYOUT_STR_LEN = 64
+	MaxAverrorStrLen       = 255
+	MaxChannelLayoutStrLen = 64
 )
 
 const (
-	AV_PICTURE_TYPE_NONE = C.AV_PICTURE_TYPE_NONE
-	AV_PICTURE_TYPE_I    = C.AV_PICTURE_TYPE_I
-	AV_PICTURE_TYPE_B    = C.AV_PICTURE_TYPE_B
-	AV_PICTURE_TYPE_P    = C.AV_PICTURE_TYPE_P
+	AvPictureTypeNone = C.AV_PICTURE_TYPE_NONE // Undefined
+	AvPictureTypeI    = C.AV_PICTURE_TYPE_I
+	AvPictureTypeB    = C.AV_PICTURE_TYPE_B
+	AvPictureTypeP    = C.AV_PICTURE_TYPE_P
+	AvPictureTypeS    = C.AV_PICTURE_TYPE_S
+	AvPictureTypeSi   = C.AV_PICTURE_TYPE_SI
+	AvPictureTypeSp   = C.AV_PICTURE_TYPE_SP
+	AvPictureTypeBi   = C.AV_PICTURE_TYPE_BI
 )
 
-//Return the LIBAvUTIL_VERSION_INT constant.
-func AvutilVersion() uint {
+func Major(v uint) uint {
+	return uint(C.major(C.uint(v)))
+}
+
+func Minor(v uint) uint {
+	return uint(C.minor(C.uint(v)))
+}
+
+func Micro(v uint) uint {
+	return uint(C.micro(C.uint(v)))
+}
+
+func AvVersion(v uint) string {
+	return fmt.Sprintf("%d.%d.%d", Major(v), Minor(v), Micro(v))
+}
+
+// Version Return the LIBAvUTIL_VERSION_INT constant.
+func Version() uint {
 	return uint(C.avutil_version())
 }
 
-//Return the libavutil build-time configuration.
-func AvutilConfiguration() string {
+func VersionInfo() string {
+	return C.GoString(C.av_version_info())
+}
+
+// Configuration Return the libavutil build-time configuration.
+func Configuration() string {
 	return C.GoString(C.avutil_configuration())
 }
 
-//Return the libavutil license.
-func AvutilLicense() string {
+// License Return the libavutil license.
+func License() string {
 	return C.GoString(C.avutil_license())
 }
 
-//Return a string describing the media_type enum, NULL if media_type is unknown.
+// AvGetMediaTypeString Return a string describing the media_type enum, NULL if media_type is unknown.
 func AvGetMediaTypeString(mt MediaType) string {
 	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(mt)))
 }
 
-//Return a single letter to describe the given picture type pict_type.
-func AvGetPictureTypeChar(pt AvPictureType) string {
-	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(pt)))
+// AvGetPictureTypeChar Return a single letter to describe the given picture type pict_type.
+func AvGetPictureTypeChar(pt AvPictureType) byte {
+	return byte(C.av_get_picture_type_char((C.enum_AVPictureType)(pt)))
 }
 
-//Return x default pointer in case p is NULL.
+// AvXIfNull Return x default pointer in case p is NULL.
 func AvXIfNull(p, x int) {
 	C.av_x_if_null(unsafe.Pointer(&p), unsafe.Pointer(&x))
 }
 
-//Compute the length of an integer list.
+// AvIntListLengthForSize Compute the length of an integer list.
 func AvIntListLengthForSize(e uint, l int, t uint64) uint {
 	return uint(C.av_int_list_length_for_size(C.uint(e), unsafe.Pointer(&l), (C.uint64_t)(t)))
 }
 
-//Open a file using a UTF-8 filename.
+// AvFopenUtf8 Open a file using a UTF-8 filename.
 func AvFopenUtf8(p, m string) *File {
 	cp := C.CString(p)
 	defer C.free(unsafe.Pointer(cp))
@@ -132,7 +172,7 @@ func AvFopenUtf8(p, m string) *File {
 	return (*File)(f)
 }
 
-//Return the fractional representation of the internal time base.
+// AvGetTimeBaseQ Return the fractional representation of the internal time base.
 func AvGetTimeBaseQ() Rational {
 	return (Rational)(C.av_get_time_base_q())
 }
@@ -150,7 +190,7 @@ func AvGetPixFmtName(pixFmt PixelFormat) string {
 }
 
 func AvGetChannelLayoutString(nbChannels int, channelLayout uint64) string {
-	bufSize := C.size_t(MAX_CHANNEL_LAYOUT_STR_LEN)
+	bufSize := C.size_t(MaxChannelLayoutStrLen)
 	buf := (*C.char)(C.malloc(bufSize))
 	if buf == nil {
 		return fmt.Sprintf("unknown channel layout with code %d", channelLayout)
@@ -160,8 +200,8 @@ func AvGetChannelLayoutString(nbChannels int, channelLayout uint64) string {
 	return C.GoString(buf)
 }
 
-func AvStrerr(errcode int) string {
-	errbufSize := C.size_t(MAX_AVERROR_STR_LEN)
+func AvStrErr(errcode int) string {
+	errbufSize := C.size_t(MaxAverrorStrLen)
 	errbuf := (*C.char)(C.malloc(errbufSize))
 	if errbuf == nil {
 		return fmt.Sprintf("unknown error with code %d", errcode)
@@ -172,4 +212,8 @@ func AvStrerr(errcode int) string {
 		return fmt.Sprintf("unknown error with code %d", errcode)
 	}
 	return C.GoString(errbuf)
+}
+
+func AvError(errcode int) error {
+	return fmt.Errorf("%d: %s", errcode, AvStrErr(errcode))
 }

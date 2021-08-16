@@ -6,28 +6,28 @@ import "C"
 import "unsafe"
 
 const (
-	AV_SAMPLE_FMT_NONE = int(C.AV_SAMPLE_FMT_NONE)
-	AV_SAMPLE_FMT_U8   = int(C.AV_SAMPLE_FMT_U8)
-	AV_SAMPLE_FMT_S16  = int(C.AV_SAMPLE_FMT_S16)
-	AV_SAMPLE_FMT_S32  = int(C.AV_SAMPLE_FMT_S32)
-	AV_SAMPLE_FMT_FLT  = int(C.AV_SAMPLE_FMT_FLT)
-	AV_SAMPLE_FMT_DBL  = int(C.AV_SAMPLE_FMT_DBL)
+	AvSampleFmtNone = int(C.AV_SAMPLE_FMT_NONE)
+	AvSampleFmtU8   = int(C.AV_SAMPLE_FMT_U8)
+	AvSampleFmtS16  = int(C.AV_SAMPLE_FMT_S16)
+	AvSampleFmtS32  = int(C.AV_SAMPLE_FMT_S32)
+	AvSampleFmtFlt  = int(C.AV_SAMPLE_FMT_FLT)
+	AvSampleFmtDbl  = int(C.AV_SAMPLE_FMT_DBL)
 
-	AV_SAMPLE_FMT_U8P  = int(C.AV_SAMPLE_FMT_U8P)
-	AV_SAMPLE_FMT_S16P = int(C.AV_SAMPLE_FMT_S16P)
-	AV_SAMPLE_FMT_S32P = int(C.AV_SAMPLE_FMT_S32P)
-	AV_SAMPLE_FMT_FLTP = int(C.AV_SAMPLE_FMT_FLTP)
-	AV_SAMPLE_FMT_DBLP = int(C.AV_SAMPLE_FMT_DBLP)
-	AV_SAMPLE_FMT_S64  = int(C.AV_SAMPLE_FMT_S64)
-	AV_SAMPLE_FMT_S64P = int(C.AV_SAMPLE_FMT_S64P)
+	AvSampleFmtU8P  = int(C.AV_SAMPLE_FMT_U8P)
+	AvSampleFmtS16P = int(C.AV_SAMPLE_FMT_S16P)
+	AvSampleFmtS32P = int(C.AV_SAMPLE_FMT_S32P)
+	AvSampleFmtFltp = int(C.AV_SAMPLE_FMT_FLTP)
+	AvSampleFmtDblp = int(C.AV_SAMPLE_FMT_DBLP)
+	AvSampleFmtS64  = int(C.AV_SAMPLE_FMT_S64)
+	AvSampleFmtS64P = int(C.AV_SAMPLE_FMT_S64P)
 
-	AV_SAMPLE_FMT_NB = int(C.AV_SAMPLE_FMT_NB)
+	AvSampleFmtNb = int(C.AV_SAMPLE_FMT_NB)
 )
 
 func AvGetSampleFmtName(sampleFmt int) string {
 	return C.GoString(C.av_get_sample_fmt_name((C.enum_AVSampleFormat)(sampleFmt)))
 }
 
-func AvSamplesAlloc(data **uint8, linesize *int, nbChannels, nbSamples, sampleFmt, align int) int {
-	return int(C.av_samples_alloc((**C.uint8_t)(unsafe.Pointer(data)), (*C.int)(unsafe.Pointer(linesize)), C.int(nbChannels), C.int(nbSamples), (C.enum_AVSampleFormat)(sampleFmt), C.int(align)))
+func AvSamplesAlloc(data **uint8, lineSize *int, nbChannels, nbSamples, sampleFmt, align int) int {
+	return int(C.av_samples_alloc((**C.uint8_t)(unsafe.Pointer(data)), (*C.int)(unsafe.Pointer(lineSize)), C.int(nbChannels), C.int(nbSamples), (C.enum_AVSampleFormat)(sampleFmt), C.int(align)))
 }
