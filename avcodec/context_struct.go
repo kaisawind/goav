@@ -64,16 +64,18 @@ func (ctxt *Context) Channels() int {
 	return int(ctxt.channels)
 }
 
-func (ctxt *Context) SetChannels(channels int) {
+func (ctxt *Context) SetChannels(channels int) *Context {
 	ctxt.channels = C.int(channels)
+	return ctxt
 }
 
 func (ctxt *Context) ChannelLayout() uint64 {
 	return uint64(ctxt.channel_layout)
 }
 
-func (ctxt *Context) SetChannelLayout(channelLayout uint64) {
+func (ctxt *Context) SetChannelLayout(channelLayout uint64) *Context {
 	ctxt.channel_layout = C.uint64_t(channelLayout)
+	return ctxt
 }
 
 func (ctxt *Context) Chromaoffset() int {
@@ -144,8 +146,9 @@ func (ctxt *Context) Flags() int {
 	return int(ctxt.flags)
 }
 
-func (ctxt *Context) SetFlags(flags int) {
+func (ctxt *Context) SetFlags(flags int) *Context {
 	ctxt.flags = C.int(flags)
+	return ctxt
 }
 
 func (ctxt *Context) Flags2() int {
@@ -164,8 +167,9 @@ func (ctxt *Context) Framerate() avutil.Rational {
 	return *(*avutil.Rational)(unsafe.Pointer(&ctxt.framerate))
 }
 
-func (ctxt *Context) SetFramerate(framerate avutil.Rational) {
+func (ctxt *Context) SetFramerate(framerate avutil.Rational) *Context {
 	ctxt.framerate = *((*C.struct_AVRational)(unsafe.Pointer(&framerate)))
+	return ctxt
 }
 
 func (ctxt *Context) FrameSize() int {
@@ -196,8 +200,9 @@ func (ctxt *Context) GopSize() int {
 	return int(ctxt.gop_size)
 }
 
-func (ctxt *Context) SetGopSize(gopSize int) {
+func (ctxt *Context) SetGopSize(gopSize int) *Context {
 	ctxt.gop_size = C.int(gopSize)
+	return ctxt
 }
 
 func (ctxt *Context) HasBFrames() int {
@@ -212,8 +217,9 @@ func (ctxt *Context) Height() int {
 	return int(ctxt.height)
 }
 
-func (ctxt *Context) SetHeight(height int) {
+func (ctxt *Context) SetHeight(height int) *Context {
 	ctxt.height = C.int(height)
+	return ctxt
 }
 
 func (ctxt *Context) ICount() int {
@@ -272,8 +278,9 @@ func (ctxt *Context) MaxBFrames() int {
 	return int(ctxt.max_b_frames)
 }
 
-func (ctxt *Context) SetMaxBFrames(maxBFrames int) {
+func (ctxt *Context) SetMaxBFrames(maxBFrames int) *Context {
 	ctxt.max_b_frames = C.int(maxBFrames)
+	return ctxt
 }
 
 func (ctxt *Context) MaxPredictionOrder() int {
@@ -290,6 +297,11 @@ func (ctxt *Context) MbCmp() int {
 
 func (ctxt *Context) MbDecision() int {
 	return int(ctxt.mb_decision)
+}
+
+func (ctxt *Context) SetMbDecision(decision int) *Context {
+	ctxt.mb_decision = C.int(decision)
+	return ctxt
 }
 
 func (ctxt *Context) MbLmax() int {
@@ -380,6 +392,11 @@ func (ctxt *Context) Profile() int {
 	return int(ctxt.profile)
 }
 
+func (ctxt *Context) SetProfile(profile int) *Context {
+	ctxt.profile = C.int(profile)
+	return ctxt
+}
+
 func (ctxt *Context) Qblur() float64 {
 	return float64(ctxt.qblur)
 }
@@ -440,8 +457,9 @@ func (ctxt *Context) SampleRate() int {
 	return int(ctxt.sample_rate)
 }
 
-func (ctxt *Context) SetSampleRate(sampleRate int) {
+func (ctxt *Context) SetSampleRate(sampleRate int) *Context {
 	ctxt.sample_rate = C.int(sampleRate)
+	return ctxt
 }
 
 func (ctxt *Context) ScenechangeThreshold() int {
@@ -508,12 +526,14 @@ func (ctxt *Context) ThreadCount() int {
 	return int(ctxt.thread_count)
 }
 
-func (ctxt *Context) SetThreadCount(threadCount int) {
+func (ctxt *Context) SetThreadCount(threadCount int) *Context {
 	ctxt.thread_count = C.int(threadCount)
+	return ctxt
 }
 
-func (ctxt *Context) SetBitRate(bitRate int64) {
+func (ctxt *Context) SetBitRate(bitRate int64) *Context {
 	ctxt.bit_rate = C.int64_t(bitRate)
+	return ctxt
 }
 
 func (ctxt *Context) ThreadSafeCallbacks() int {
@@ -536,8 +556,9 @@ func (ctxt *Context) Width() int {
 	return int(ctxt.width)
 }
 
-func (ctxt *Context) SetWidth(width int) {
+func (ctxt *Context) SetWidth(width int) *Context {
 	ctxt.width = C.int(width)
+	return ctxt
 }
 
 func (ctxt *Context) WorkaroundBugs() int {
@@ -558,6 +579,10 @@ func (ctxt *Context) CodecDescriptor() *Descriptor {
 
 func (ctxt *Context) CodecId() CodecId {
 	return (CodecId)(ctxt.codec_id)
+}
+
+func (ctxt *Context) SetCodecId(id CodecId) {
+	ctxt.codec_id = uint32(id)
 }
 
 func (ctxt *Context) CodecType() MediaType {
@@ -588,8 +613,9 @@ func (ctxt *Context) PixFmt() avutil.PixelFormat {
 	return (avutil.PixelFormat)(ctxt.pix_fmt)
 }
 
-func (ctxt *Context) SetPixFmt(pixFmt avutil.PixelFormat) {
+func (ctxt *Context) SetPixFmt(pixFmt avutil.PixelFormat) *Context {
 	ctxt.pix_fmt = C.enum_AVPixelFormat(pixFmt)
+	return ctxt
 }
 
 func (ctxt *Context) RequestSampleFmt() AvSampleFormat {
@@ -600,15 +626,17 @@ func (ctxt *Context) SampleFmt() AvSampleFormat {
 	return (AvSampleFormat)(ctxt.sample_fmt)
 }
 
-func (ctxt *Context) SetSampleFmt(sampleFormat AvSampleFormat) {
+func (ctxt *Context) SetSampleFmt(sampleFormat AvSampleFormat) *Context {
 	ctxt.sample_fmt = C.enum_AVSampleFormat(sampleFormat)
+	return ctxt
 }
 func (ctxt *Context) SkipFrame() AvDiscard {
 	return (AvDiscard)(ctxt.skip_frame)
 }
 
-func (ctxt *Context) SetSkipFrame(d AvDiscard) {
+func (ctxt *Context) SetSkipFrame(d AvDiscard) *Context {
 	ctxt.skip_frame = C.enum_AVDiscard(d)
+	return ctxt
 }
 
 func (ctxt *Context) SkipIdct() AvDiscard {
@@ -623,14 +651,16 @@ func (ctxt *Context) TimeBase() avutil.Rational {
 	return *(*avutil.Rational)(unsafe.Pointer(&ctxt.time_base))
 }
 
-func (ctxt *Context) SetTimeBase(timeBase avutil.Rational) {
+func (ctxt *Context) SetTimeBase(timeBase avutil.Rational) *Context {
 	ctxt.time_base = *((*C.struct_AVRational)(unsafe.Pointer(&timeBase)))
+	return ctxt
 }
 
 func (ctxt *Context) SampleAspectRatio() avutil.Rational {
 	return *(*avutil.Rational)(unsafe.Pointer(&ctxt.sample_aspect_ratio))
 }
 
-func (ctxt *Context) SetSampleAspectRatio(r avutil.Rational) {
+func (ctxt *Context) SetSampleAspectRatio(r avutil.Rational) *Context {
 	ctxt.sample_aspect_ratio = *((*C.struct_AVRational)(unsafe.Pointer(&r)))
+	return ctxt
 }

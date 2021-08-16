@@ -20,6 +20,7 @@ package avformat
 //#include <libavdevice/avdevice.h>
 import "C"
 import (
+	"github.com/asticode/goav/avcodec"
 	"unsafe"
 
 	"github.com/asticode/goav/avutil"
@@ -37,7 +38,6 @@ type (
 	AvProgram                  C.struct_AVProgram
 	AvChapter                  C.struct_AVChapter
 	AvPacketList               C.struct_AVPacketList
-	Packet                     C.struct_AVPacket
 	CodecParserContext         C.struct_AVCodecParserContext
 	AvIOContext                C.struct_AVIOContext
 	AvCodec                    C.struct_AVCodec
@@ -74,13 +74,13 @@ const (
 type File C.FILE
 
 // AvGetPacket Allocate and read the payload of a packet and initialize its fields with default values.
-func (ctxt *AvIOContext) AvGetPacket(pkt *Packet, s int) int {
-	return int(C.av_get_packet((*C.struct_AVIOContext)(ctxt), (*C.struct_AVPacket)(pkt), C.int(s)))
+func (ctxt *AvIOContext) AvGetPacket(pkt *avcodec.Packet, s int) int {
+	return int(C.av_get_packet((*C.struct_AVIOContext)(ctxt), (*C.struct_AVPacket)(unsafe.Pointer(pkt)), C.int(s)))
 }
 
 // AvAppendPacket Read data and append it to the current content of the Packet.
-func (ctxt *AvIOContext) AvAppendPacket(pkt *Packet, s int) int {
-	return int(C.av_append_packet((*C.struct_AVIOContext)(ctxt), (*C.struct_AVPacket)(pkt), C.int(s)))
+func (ctxt *AvIOContext) AvAppendPacket(pkt *avcodec.Packet, s int) int {
+	return int(C.av_append_packet((*C.struct_AVIOContext)(ctxt), (*C.struct_AVPacket)(unsafe.Pointer(pkt)), C.int(s)))
 }
 
 func (f *OutputFormat) Flags() int {
@@ -227,13 +227,13 @@ func AvHexDumpLog(a, l int, b *uint8, s int) {
 }
 
 // AvPktDump2 Send a nice dump of a packet to the specified file stream.
-func AvPktDump2(f *File, pkt *Packet, dp int, st *Stream) {
-	C.av_pkt_dump2((*C.FILE)(f), (*C.struct_AVPacket)(pkt), C.int(dp), (*C.struct_AVStream)(st))
+func AvPktDump2(f *File, pkt *avcodec.Packet, dp int, st *Stream) {
+	C.av_pkt_dump2((*C.FILE)(f), (*C.struct_AVPacket)(unsafe.Pointer(pkt)), C.int(dp), (*C.struct_AVStream)(st))
 }
 
 // AvPktDumpLog2 Send a nice dump of a packet to the log.
-func AvPktDumpLog2(a int, l int, pkt *Packet, dp int, st *Stream) {
-	C.av_pkt_dump_log2(unsafe.Pointer(&a), C.int(l), (*C.struct_AVPacket)(pkt), C.int(dp), (*C.struct_AVStream)(st))
+func AvPktDumpLog2(a int, l int, pkt *avcodec.Packet, dp int, st *Stream) {
+	C.av_pkt_dump_log2(unsafe.Pointer(&a), C.int(l), (*C.struct_AVPacket)(unsafe.Pointer(pkt)), C.int(dp), (*C.struct_AVStream)(st))
 }
 
 // AvCodecGetId enum CodecId av_codec_get_id (const struct AvCodecTag *const *tags, unsigned int tag)

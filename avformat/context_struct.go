@@ -70,22 +70,14 @@ func (ctxt *Context) Programs() **AvProgram {
 }
 
 func (ctxt *Context) Streams() []*Stream {
-	arr := (*[MaxArraySize](*Stream))(unsafe.Pointer(ctxt.streams))
+	arr := (*[MaxArraySize]*Stream)(unsafe.Pointer(ctxt.streams))
 
 	return arr[:ctxt.NbStreams()]
 }
 
-func (ctxt *Context) Filename() string {
-	return C.GoString((*C.char)(unsafe.Pointer(&ctxt.filename[0])))
+func (ctxt *Context) URL() string {
+	return C.GoString(ctxt.url)
 }
-
-// func (ctxt *Context) CodecWhitelist() string {
-// 	return C.GoString(ctxt.codec_whitelist)
-// }
-
-// func (ctxt *Context) FormatWhitelist() string {
-// 	return C.GoString(ctxt.format_whitelist)
-// }
 
 func (ctxt *Context) AudioCodecId() CodecId {
 	return CodecId(ctxt.audio_codec_id)
@@ -225,6 +217,10 @@ func (ctxt *Context) SkipInitialBytes() int64 {
 
 func (ctxt *Context) StartTime() int64 {
 	return int64(ctxt.start_time)
+}
+
+func (ctxt *Context) SetStartTime(startTime int64) {
+	ctxt.start_time = C.long(startTime)
 }
 
 func (ctxt *Context) StartTimeRealtime() int64 {

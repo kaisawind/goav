@@ -200,7 +200,7 @@ func AvGetChannelLayoutString(nbChannels int, channelLayout uint64) string {
 	return C.GoString(buf)
 }
 
-func AvStrerr(errcode int) string {
+func AvStrErr(errcode int) string {
 	errbufSize := C.size_t(MaxAverrorStrLen)
 	errbuf := (*C.char)(C.malloc(errbufSize))
 	if errbuf == nil {
@@ -212,4 +212,8 @@ func AvStrerr(errcode int) string {
 		return fmt.Sprintf("unknown error with code %d", errcode)
 	}
 	return C.GoString(errbuf)
+}
+
+func AvError(errcode int) error {
+	return fmt.Errorf("%d: %s", errcode, AvStrErr(errcode))
 }

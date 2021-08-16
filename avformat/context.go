@@ -13,8 +13,19 @@ import (
 	"github.com/asticode/goav/avutil"
 )
 
+// FreeContext Free an Context and all its streams.
+func FreeContext(ctxt *Context) {
+	C.avformat_free_context((*C.struct_AVFormatContext)(ctxt))
+}
+
 // CloseInput Close an opened input Context.
 func CloseInput(ctxt *Context) {
+	var ptr *C.struct_AVFormatContext = (*C.struct_AVFormatContext)(unsafe.Pointer(ctxt))
+	C.avformat_close_input((**C.struct_AVFormatContext)(&ptr))
+}
+
+// CloseInput Close an opened input Context.
+func (ctxt *Context) CloseInput() {
 	var ptr *C.struct_AVFormatContext = (*C.struct_AVFormatContext)(unsafe.Pointer(ctxt))
 	C.avformat_close_input((**C.struct_AVFormatContext)(&ptr))
 }
@@ -29,14 +40,14 @@ func (ctxt *Context) AvFmtCtxGetDurationEstimationMethod() AvDurationEstimationM
 	return (AvDurationEstimationMethod)(C.av_fmt_ctx_get_duration_estimation_method((*C.struct_AVFormatContext)(ctxt)))
 }
 
-// FreeContext Free an Context and all its streams.
-func (ctxt *Context) FreeContext() {
+// Free Free an Context and all its streams.
+func (ctxt *Context) Free() {
 	C.avformat_free_context((*C.struct_AVFormatContext)(ctxt))
 }
 
 // NewStream Add a new stream to a media file.
-func (ctxt *Context) NewStream(c *AvCodec) *Stream {
-	return (*Stream)(C.avformat_new_stream((*C.struct_AVFormatContext)(ctxt), (*C.struct_AVCodec)(c)))
+func (ctxt *Context) NewStream() *Stream {
+	return (*Stream)(C.avformat_new_stream((*C.struct_AVFormatContext)(ctxt), nil))
 }
 
 func (ctxt *Context) AvNewProgram(id int) *AvProgram {
@@ -94,13 +105,13 @@ func (ctxt *Context) WriteHeader(o **avutil.Dictionary) int {
 }
 
 // AvWriteFrame Write a packet to an output media file.
-func (ctxt *Context) AvWriteFrame(pkt *Packet) int {
-	return int(C.av_write_frame((*C.struct_AVFormatContext)(ctxt), (*C.struct_AVPacket)(pkt)))
+func (ctxt *Context) AvWriteFrame(pkt *avcodec.Packet) int {
+	return int(C.av_write_frame((*C.struct_AVFormatContext)(ctxt), (*C.struct_AVPacket)(unsafe.Pointer(pkt))))
 }
 
 // AvInterleavedWriteFrame Write a packet to an output media file ensuring correct interleaving.
-func (ctxt *Context) AvInterleavedWriteFrame(pkt *Packet) int {
-	return int(C.av_interleaved_write_frame((*C.struct_AVFormatContext)(ctxt), (*C.struct_AVPacket)(pkt)))
+func (ctxt *Context) AvInterleavedWriteFrame(pkt *avcodec.Packet) int {
+	return int(C.av_interleaved_write_frame((*C.struct_AVFormatContext)(ctxt), (*C.struct_AVPacket)(unsafe.Pointer(pkt))))
 }
 
 // AvWriteUncodedFrame Write a uncoded frame to an output media file.

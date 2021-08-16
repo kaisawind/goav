@@ -19,3 +19,11 @@ func TestAvGetPictureTypeChar(t *testing.T) {
 	}
 	t.Logf("%c", c)
 }
+
+func TestAvError(t *testing.T) {
+	err := avutil.AvError(avutil.AvErrorEperm)
+	if err == nil {
+		t.FailNow()
+	}
+	t.Log(err)
+}

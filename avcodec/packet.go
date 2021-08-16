@@ -45,6 +45,12 @@ func (p *Packet) AvPacketFromByteSlice(buf []byte) int {
 	return p.AvPacketFromData((*uint8)(ptr), len(buf))
 }
 
+// Free Free a packet.
+func (p *Packet) Free() {
+	var ptr *C.struct_AVPacket = (*C.struct_AVPacket)(p)
+	C.av_packet_free(&ptr)
+}
+
 // AvPacketFree Free a packet.
 func AvPacketFree(p *Packet) {
 	var ptr *C.struct_AVPacket = (*C.struct_AVPacket)(p)

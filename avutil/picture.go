@@ -35,10 +35,10 @@ func AvImageFillArrays(dstData [8]*uint8, dstLinesize [8]int32, src []uint8,
 
 // AvImageAlloc Allocate an image with size w and h and pixel format pix_fmt, and fill pointers and linesizes accordingly.
 // The allocated image buffer has to be freed by using AvFreeP(&pointers[0]).
-func AvImageAlloc(pointers [8]*uint8, linesizes [8]int32, w, h int, pix_fmt PixelFormat, align int) int {
-	cPointers := (**C.uint8_t)(unsafe.Pointer(&pointers[0]))
-	cLinesizes := (*C.int)(unsafe.Pointer(&linesizes[0]))
-	cPixFmt := (C.enum_AVPixelFormat)(pix_fmt)
+func AvImageAlloc(pointers **uint8, linesizes *int, w, h int, pixFmt PixelFormat, align int) int {
+	cPointers := (**C.uint8_t)(unsafe.Pointer(pointers))
+	cLinesizes := (*C.int)(unsafe.Pointer(linesizes))
+	cPixFmt := (C.enum_AVPixelFormat)(pixFmt)
 
 	return int(C.av_image_alloc(cPointers, cLinesizes, C.int(w), C.int(h), cPixFmt, C.int(align)))
 }
